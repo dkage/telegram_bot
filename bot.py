@@ -24,8 +24,10 @@ class Telegram:
         update_url = self.url + 'getUpdates?timeout=100'
         if self.offset:
             update_url += "&offset={}".format(self.offset)
-        x = 0
-        return x
+        http_response = requests.get(update_url)
+        json_response = http_response.json()
+        # TODO get highest JSON element to get latest message_id/update_id
+        return json_response
 
     def get_last_chat_id_and_text(self):
         # TODO
@@ -47,5 +49,4 @@ class Telegram:
 
 bot = Telegram()
 bot.get_me()
-print(bot.name)
-print(bot.bot_id)
+bot.get_updates()
