@@ -1,25 +1,31 @@
 from api_keys import BOT_KEY
 import requests
 
-class telegram:
+
+class Telegram:
 
     def __init__(self):
-        self.name = 'RedTwitBot'
-        self.aux = 'aux'
-        self.url = 'https://api.telegram.org/bot' + BOT_KEY
+        self.name = ''
+        self.url = "https://api.telegram.org/bot{}/".format(BOT_KEY)
+        self.bot_id = 0
+        self.offset = None
 
     def get_me(self):
-        http_response = requests.get(self.url+'/getMe')
+        http_response = requests.get(self.url+'getMe')
         json_response = http_response.json()
+        self.bot_id = json_response['result']['id']
+        self.name = json_response['result']['username']
         if json_response['ok']:
-            return print('Bot is valid and working')
+            return True
         else:
-            return print('Bot error')
+            return False
 
-    def get_updates (self):
-        # TODO
-        self.aux = 'aux2'
-        return True
+    def get_updates(self):
+        update_url = self.url + 'getUpdates?timeout=100'
+        if self.offset:
+            update_url += "&offset={}".format(self.offset)
+        x = 0
+        return x
 
     def get_last_chat_id_and_text(self):
         # TODO
@@ -39,7 +45,7 @@ class telegram:
         return True
 
 
-
-bot = telegram()
-bot.get_me()\
-
+bot = Telegram()
+bot.get_me()
+print(bot.name)
+print(bot.bot_id)
