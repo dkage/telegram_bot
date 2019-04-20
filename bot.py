@@ -26,8 +26,14 @@ class Telegram:
             update_url += "&offset={}".format(self.offset)
         http_response = requests.get(update_url)
         json_response = http_response.json()
+        print(update_url)
+        print(json_response)
         # TODO get highest JSON element to get latest message_id/update_id
-        return json_response
+        self.offset = json_response['result'][-1]['update_id']
+        if json_response['ok']:
+            return json_response['result']
+        else:
+            return False
 
     def get_last_chat_id_and_text(self):
         # TODO
@@ -49,4 +55,7 @@ class Telegram:
 
 bot = Telegram()
 bot.get_me()
+print('update 1')
+bot.get_updates()
+print('update 2')
 bot.get_updates()
