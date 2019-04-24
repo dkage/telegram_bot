@@ -9,6 +9,8 @@ class Telegram:
         self.url = "https://api.telegram.org/bot{}/".format(BOT_KEY)
         self.bot_id = 0
         self.offset = None
+        self.aux = 0
+        self.updates_json = ''
 
     def get_me(self):
         http_response = requests.get(self.url+'getMe')
@@ -22,19 +24,22 @@ class Telegram:
 
     def get_updates(self):
         update_url = self.url + 'getUpdates?timeout=100'
+        # If offset is already set, concatenates it to tell API last ID already received
         if self.offset:
             update_url += "&offset={}".format(self.offset)
         http_response = requests.get(update_url)
         json_response = http_response.json()
-        # print(update_url)
-        # print(json_response)
+        self.updates_json = json_response['result']
+        print(update_url)  # Keep for debugging
+        print(json_response)  # Keep for debugging
+        # Grabs last offset update_id, and adds one so updates already received and not returned anymore
         self.offset = int(json_response['result'][-1]['update_id']) + 1
         if json_response['ok']:
-            return json_response['result']
+            return True
         else:
             return False
 
-    def get_last_chat_id_and_text(self):
+    def message_treatement(self):
         # TODO
         self.aux = 'aux3'
         return True
@@ -51,6 +56,6 @@ class Telegram:
 
 bot = Telegram()
 
-# bot.get_me()
-# bot.get_updates()
+bot.get_me()
+bot.get_updates()
 # bot.get_updates()
