@@ -53,12 +53,11 @@ class Telegram:
         else:
             return update_text, update_chat_id, update_from_user
 
-    def get_last_update_id(self):
-        # TODO
-        pass
-
     def send_message(self, text_to_send, receiver_id):
-        pass
+        http_response = requests.get(self.url + "sendMessage?text={}&chat_id={}".format(text_to_send, receiver_id))
+        print(http_response)
+        print(type(http_response))
+        return True
 
 
 bot = Telegram()
@@ -66,6 +65,5 @@ bot = Telegram()
 bot.get_me()
 json_return = bot.get_updates()
 message, chat, username = bot.get_update_data(json_return[0]['message'])
-print(message)
-print(chat)
-print(username)
+
+bot.send_message('Hello there ' + username, chat)
